@@ -52,30 +52,32 @@
       };
 
       var furf = new Person('furf');
-
+      
       console.profile();
             
-      // bindable
       $.bindable(Person, 'onDoSomething onDoSomethingElse');
+      $.loadable(Person, 'test.json');
+      $.renderable(Person, 'test.tpl');
+      $.pollable(Person);
+
+            
+      // bindable
       furf.bind('onDoSomething', dump('bindable'));
       furf.doSomething('fart');
       
       
       // loadable
-      $.loadable(Person, 'test.json');
       furf.onLoadSuccess(dump('loadable'));
       furf.load();
       
       
       // renderable
-      $.renderable(Person, 'test.tpl');
       furf.onBeforeRender(dump('renderable'));
       furf.onRender(dump('renderable'));
       furf.render({msg:"wahoo!"}, true);
       
       
       // pollable
-      $.pollable(Person, 'doSomethingElse');
       furf.onStart(dump('pollable'));
       furf.onExecute(dump('pollable'));
       furf.onStop(dump('pollable'));
@@ -83,9 +85,9 @@
       furf.start('doSomethingElse', 1000, ['burp'], true);
       setTimeout(function () {
         furf.stop('doSomethingElse');
-      
         console.profileEnd();
       }, 500);
+
 
     })(this, this.document, this.jQuery);
     </script>

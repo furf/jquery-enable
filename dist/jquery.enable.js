@@ -562,8 +562,4 @@
 
     return obj;
   };
-
-  // $.each($.)
-
-
 })(this, this.document, this.jQuery);
