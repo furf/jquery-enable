@@ -1,4 +1,4 @@
-(function (window, document, jQuery) {
+(function (window, document, $) {
 
   /**
    * Regular expression for finding whitespace

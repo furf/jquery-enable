@@ -1,3 +1,4 @@
+
   /**
    * $.pollable
    * @todo add passing of anon function to start?

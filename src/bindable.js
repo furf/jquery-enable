@@ -1,3 +1,4 @@
+
   /**
    * Add jQuery custom events to any object
    * @param {object|function} obj (optional) Object to be augmented with bindable behavior

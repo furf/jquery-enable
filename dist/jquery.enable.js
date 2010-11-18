@@ -1,4 +1,4 @@
-(function (window, document, jQuery) {
+(function (window, document, $) {
 
   /**
    * Regular expression for finding whitespace
@@ -14,6 +14,7 @@
     str = str && $.trim(str);
     return str.length ? str.split(rwhite) : [];
   };
+
   /**
    * Add jQuery custom events to any object
    * @param {object|function} obj (optional) Object to be augmented with bindable behavior
@@ -72,6 +73,7 @@
 
     return obj;
   };
+
   /**
    * $.loadable
    *
@@ -247,6 +249,7 @@
 
     return obj;
   };
+
   /**
    * $.renderable
    *
@@ -301,6 +304,7 @@
 
     return obj;
   };
+
   /**
    * $.pollable
    * @todo add passing of anon function to start?
@@ -404,6 +408,7 @@
 
     return obj;
   };
+
   /**
    * $.cacheable
    *
@@ -512,6 +517,7 @@
 
     return obj;
   };
+
   /**
    * $.observable
    *
@@ -562,4 +568,5 @@
 
     return obj;
   };
+
 })(this, this.document, this.jQuery);
