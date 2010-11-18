@@ -38,9 +38,9 @@
       if (event.type !== all.type) {
         jQuery.event.trigger(event, data, this);
       }
-
-			jQuery.event.trigger(all, data, this);
-
+      
+      jQuery.event.trigger(all, data, this);
+      
       return this;
     };
 
