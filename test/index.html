@@ -19,7 +19,7 @@
       
     </div>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
     <script src="https://github.com/furf/jquery-template/raw/master/jquery.template.js"></script>
     <script src="../dist/jquery.enable.js"></script>    
     <script>
@@ -67,15 +67,15 @@
       $.loadable(Person, 'test.json');
       furf.onLoadSuccess(dump('loadable'));
       furf.load();
-
-
+      
+      
       // renderable
       $.renderable(Person, 'test.tpl');
       furf.onBeforeRender(dump('renderable'));
       furf.onRender(dump('renderable'));
       furf.render({msg:"wahoo!"}, true);
-
-
+      
+      
       // pollable
       $.pollable(Person, 'doSomethingElse');
       furf.onStart(dump('pollable'));
@@ -85,7 +85,7 @@
       furf.start('doSomethingElse', 1000, ['burp'], true);
       setTimeout(function () {
         furf.stop('doSomethingElse');
-
+      
         console.groupEnd('flop');
         console.profileEnd('testing');
       }, 500);
@@ -93,6 +93,48 @@
 
 
 
+      // var foo = $.bindable({
+      //       foo: function () {
+      //         var evtName = 'foo';
+      //         console.log(this + ' : ' + evtName);
+      //         this.trigger(evtName);
+      //       },
+      //       toString: function () {
+      //         return '[object foo]';
+      //       }
+      //     }),
+      //     
+      //     bar = $.bindable({
+      //       bar: function () {
+      //         var evtName = 'bar';
+      //         console.log(this + ' : ' + evtName);
+      //         this.trigger(evtName);
+      //       },
+      //       toString: function () {
+      //         return '[object bar]';
+      //       }
+      //     }),
+      //     
+      //     baz = $.bindable({
+      //       baz: function () {
+      //         var evtName = 'baz';
+      //         console.log(this + ' : ' + evtName);
+      //         this.trigger(evtName);
+      //       },
+      //       toString: function () {
+      //         return '[object baz]';
+      //       }
+      //     });
+      //     
+      //     
+      // foo.bind('foo', $.proxy(bar.bar, bar));
+      // bar.bind('bar', $.proxy(baz.baz, baz));
+      // baz.bind('baz', function (evt) {
+      //   console.dir(evt);
+      // });
+      // 
+      // // console.dir(foo);
+      // foo.foo();
       
     })(this, this.document, this.jQuery);
     </script>

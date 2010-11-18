@@ -3,6 +3,7 @@
    *
    * @param {object|function} obj (optional) Object to be augmented with loadable behavior
    * @param {object|string} defaultCfg Default jQuery.ajax configuration object
+   * @return {object} Augmented object
    */
   jQuery.loadable = function (obj, defaultCfg) {
 

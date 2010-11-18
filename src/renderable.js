@@ -4,6 +4,7 @@
    * @param {object|function} obj (optional) Object to be augmented with renderable behavior
    * @param {string} tpl Template or URL to template file
    * @param {string|jQuery} elem (optional) Target DOM element
+   * @return {object} Augmented object
    */
   jQuery.renderable = function (obj, tpl, elem) {
 

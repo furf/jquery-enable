@@ -1,3 +1,9 @@
+  /**
+   * Add jQuery custom events to any object
+   * @param {object|function} obj (optional) Object to be augmented with bindable behavior
+   * @param {string} types (optional) Custom event subscriber functions
+   * @return {object} Augmented object
+   */
   jQuery.bindable = function (obj, types) {
 
     // Allow instantiation without object
@@ -11,8 +17,8 @@
 
     // Augment the object with jQuery's bind, one, and unbind event methods
     jQuery(['bind', 'one', 'unbind']).each(function (i, method) {
-      obj[method] = function (type, data, fn, thisObject) {
-        jQuery(this)[method](type, data, fn, thisObject);
+      obj[method] = function (type, data, fn) {
+        jQuery(this)[method](type, data, fn);
         return this;
       };
     });
@@ -21,14 +27,20 @@
     // Event to prevent unexpected triggering of a method (and possibly
     // infinite recursion) when the event type matches the method name
     obj.trigger = function (type, data) {
+
       var event = new jQuery.Event(type),
           all   = new jQuery.Event(event);
+
       event.preventDefault();
+      
       all.type = '*';
-      if (event.type !== '*') {
-        jQuery(this).trigger(event, data);
+
+      if (event.type !== all.type) {
+        jQuery.event.trigger(event, data, this);
       }
-      jQuery(this).trigger(all, data);
+
+			jQuery.event.trigger(all, data, this);
+
       return this;
     };
 
@@ -36,8 +48,8 @@
     // to specified events
     if (typeof types === 'string') {
       jQuery.each(jQuery.unwhite(types), function (i, type) {
-        obj[type] = function (data, fn, thisObject) {
-          return arguments.length ? this.bind(type, data, fn, thisObject) : this.trigger(type);
+        obj[type] = function (data, fn) {
+          return arguments.length ? this.bind(type, data, fn) : this.trigger(type);
         };
       });
     }

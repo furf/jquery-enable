@@ -2,6 +2,7 @@
    * jQuery.observable
    *
    * @param {object|function} obj Object to be augmented with observable behavior
+   * @return {object} Augmented object
    */
   jQuery.observable = function (obj) {
 

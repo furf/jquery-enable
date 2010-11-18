@@ -3,6 +3,7 @@
    *
    * @param {object|function} obj (optional) Object to be augmented with cacheable behavior
    * @param {number} defaultTtl (optional) Default time-to-live for cached items
+   * @return {object} Augmented object
    */
   jQuery.cacheable = function (obj, defaultTtl) {
 

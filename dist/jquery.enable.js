@@ -14,6 +14,12 @@
     str = str && jQuery.trim(str);
     return str.length ? str.split(rwhite) : [];
   };
+  /**
+   * Add jQuery custom events to any object
+   * @param {object|function} obj (optional) Object to be augmented with bindable behavior
+   * @param {string} types (optional) Custom event subscriber functions
+   * @return {object} Augmented object
+   */
   jQuery.bindable = function (obj, types) {
 
     // Allow instantiation without object
@@ -27,8 +33,8 @@
 
     // Augment the object with jQuery's bind, one, and unbind event methods
     jQuery(['bind', 'one', 'unbind']).each(function (i, method) {
-      obj[method] = function (type, data, fn, thisObject) {
-        jQuery(this)[method](type, data, fn, thisObject);
+      obj[method] = function (type, data, fn) {
+        jQuery(this)[method](type, data, fn);
         return this;
       };
     });
@@ -37,14 +43,20 @@
     // Event to prevent unexpected triggering of a method (and possibly
     // infinite recursion) when the event type matches the method name
     obj.trigger = function (type, data) {
+
       var event = new jQuery.Event(type),
           all   = new jQuery.Event(event);
+
       event.preventDefault();
+      
       all.type = '*';
-      if (event.type !== '*') {
-        jQuery(this).trigger(event, data);
+
+      if (event.type !== all.type) {
+        jQuery.event.trigger(event, data, this);
       }
-      jQuery(this).trigger(all, data);
+
+			jQuery.event.trigger(all, data, this);
+
       return this;
     };
 
@@ -52,8 +64,8 @@
     // to specified events
     if (typeof types === 'string') {
       jQuery.each(jQuery.unwhite(types), function (i, type) {
-        obj[type] = function (data, fn, thisObject) {
-          return arguments.length ? this.bind(type, data, fn, thisObject) : this.trigger(type);
+        obj[type] = function (data, fn) {
+          return arguments.length ? this.bind(type, data, fn) : this.trigger(type);
         };
       });
     }
@@ -65,6 +77,7 @@
    *
    * @param {object|function} obj (optional) Object to be augmented with loadable behavior
    * @param {object|string} defaultCfg Default jQuery.ajax configuration object
+   * @return {object} Augmented object
    */
   jQuery.loadable = function (obj, defaultCfg) {
 
@@ -240,6 +253,7 @@
    * @param {object|function} obj (optional) Object to be augmented with renderable behavior
    * @param {string} tpl Template or URL to template file
    * @param {string|jQuery} elem (optional) Target DOM element
+   * @return {object} Augmented object
    */
   jQuery.renderable = function (obj, tpl, elem) {
 
@@ -291,6 +305,7 @@
    * jQuery.pollable
    * @todo add passing of anon function to start?
    * @param {object|function} obj (optional) Object to be augmented with pollable behavior
+   * @return {object} Augmented object
    */
   jQuery.pollable = function (obj) {
 
@@ -394,6 +409,7 @@
    *
    * @param {object|function} obj (optional) Object to be augmented with cacheable behavior
    * @param {number} defaultTtl (optional) Default time-to-live for cached items
+   * @return {object} Augmented object
    */
   jQuery.cacheable = function (obj, defaultTtl) {
 
@@ -500,6 +516,7 @@
    * jQuery.observable
    *
    * @param {object|function} obj Object to be augmented with observable behavior
+   * @return {object} Augmented object
    */
   jQuery.observable = function (obj) {
 

@@ -2,6 +2,7 @@
    * jQuery.pollable
    * @todo add passing of anon function to start?
    * @param {object|function} obj (optional) Object to be augmented with pollable behavior
+   * @return {object} Augmented object
    */
   jQuery.pollable = function (obj) {
 
