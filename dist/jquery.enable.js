@@ -10,8 +10,8 @@
    * @param {string} str Whitespace-delimited list
    * @return {array}
    */
-  jQuery.unwhite = function (str) {
-    str = str && jQuery.trim(str);
+  $.unwhite = function (str) {
+    str = str && $.trim(str);
     return str.length ? str.split(rwhite) : [];
   };
   /**
@@ -20,7 +20,7 @@
    * @param {string} types (optional) Custom event subscriber functions
    * @return {object} Augmented object
    */
-  jQuery.bindable = function (obj, types) {
+  $.bindable = function (obj, types) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -29,12 +29,12 @@
     }
 
     // Allow use of prototype for shorthanding the augmentation of classes
-    obj = jQuery.isFunction(obj) ? obj.prototype : obj;
+    obj = $.isFunction(obj) ? obj.prototype : obj;
 
     // Augment the object with jQuery's bind, one, and unbind event methods
-    jQuery(['bind', 'one', 'unbind']).each(function (i, method) {
+    $.each(['bind', 'one', 'unbind'], function (i, method) {
       obj[method] = function (type, data, fn) {
-        jQuery(this)[method](type, data, fn);
+        $(this)[method](type, data, fn);
         return this;
       };
     });
@@ -44,18 +44,18 @@
     // infinite recursion) when the event type matches the method name
     obj.trigger = function (type, data) {
 
-      var event = new jQuery.Event(type),
-          all   = new jQuery.Event(event);
+      var event = new $.Event(type),
+          all   = new $.Event(event);
 
       event.preventDefault();
       
       all.type = '*';
 
       if (event.type !== all.type) {
-        jQuery.event.trigger(event, data, this);
+        $.event.trigger(event, data, this);
       }
       
-      jQuery.event.trigger(all, data, this);
+      $.event.trigger(all, data, this);
       
       return this;
     };
@@ -63,7 +63,7 @@
     // Create convenience methods for event subscription which bind callbacks
     // to specified events
     if (typeof types === 'string') {
-      jQuery.each(jQuery.unwhite(types), function (i, type) {
+      $.each($.unwhite(types), function (i, type) {
         obj[type] = function (data, fn) {
           return arguments.length ? this.bind(type, data, fn) : this.trigger(type);
         };
@@ -73,13 +73,13 @@
     return obj;
   };
   /**
-   * jQuery.loadable
+   * $.loadable
    *
    * @param {object|function} obj (optional) Object to be augmented with loadable behavior
-   * @param {object|string} defaultCfg Default jQuery.ajax configuration object
+   * @param {object|string} defaultCfg Default $.ajax configuration object
    * @return {object} Augmented object
    */
-  jQuery.loadable = function (obj, defaultCfg) {
+  $.loadable = function (obj, defaultCfg) {
 
     // Allow instantiation without object
     if (typeof defaultCfg === 'undefined') {
@@ -88,7 +88,7 @@
     }
 
     // Implement bindable behavior, adding custom methods for Ajax events
-    obj = jQuery.bindable(obj, 'onLoadBeforeSend onLoadAbort onLoadSuccess onLoadError onLoadComplete');
+    obj = $.bindable(obj, 'onLoadBeforeSend onLoadAbort onLoadSuccess onLoadError onLoadComplete');
 
     // Allow URL as config (shortcut)
     if (typeof defaultCfg === 'string') {
@@ -97,7 +97,7 @@
       };
     }
 
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * Merge runtime config with default config
@@ -114,14 +114,14 @@
           cfg = {
             url: cfg
           };
-        } else if (jQuery.isFunction(cfg)) {
+        } else if ($.isFunction(cfg)) {
           cfg = {
             success: cfg
           };
         }
 
         // Extend default config with runtime config
-        cfg = jQuery.extend(true, {}, defaultCfg, cfg);
+        cfg = $.extend(true, {}, defaultCfg, cfg);
 
         // Cache configured callbacks so they can be called from wrapper
         // functions below.
@@ -131,19 +131,19 @@
         error      = cfg.error;
         complete   = cfg.complete;
 
-        // Overload each of the configured jQuery.ajax callback methods with an
+        // Overload each of the configured $.ajax callback methods with an
         // evented wrapper function. Each wrapper function executes the
         // configured callback in the scope of the loadable object and then
         // fires the corresponding event, passing to it the return value of
         // the configured callback or the unmodified arguments if no callback
         // is supplied or the return value is undefined.
-        return jQuery.extend(cfg, {
+        return $.extend(cfg, {
 
           /**
            * @param {XMLHTTPRequest} xhr
            * @param {object} cfg
            */
-          beforeSend: jQuery.proxy(function (xhr, cfg) {
+          beforeSend: $.proxy(function (xhr, cfg) {
 
             // If defined, execute the beforeSend callback and store its return
             // value for later return from this proxy function -- used for
@@ -165,7 +165,7 @@
 
 
           // just added -- doc it up
-          dataFilter: dataFilter && jQuery.proxy(function (response, type) {
+          dataFilter: dataFilter && $.proxy(function (response, type) {
             return dataFilter.apply(this, arguments);
           }, this),
 
@@ -175,7 +175,7 @@
            * @param {string} status
            * @param {XMLHTTPRequest} xhr
            */
-          success: jQuery.proxy(function (data, status, xhr) {
+          success: $.proxy(function (data, status, xhr) {
 
             var ret;
 
@@ -197,7 +197,7 @@
            * @param {Error} e
            * @todo correct param type for error?
            */
-          error: jQuery.proxy(function (xhr, status, e) {
+          error: $.proxy(function (xhr, status, e) {
 
             var ret;
 
@@ -217,7 +217,7 @@
            * @param {XMLHTTPRequest} xhr
            * @param {string} status
            */
-          complete: jQuery.proxy(function (xhr, status) {
+          complete: $.proxy(function (xhr, status) {
 
             var ret;
 
@@ -237,10 +237,10 @@
 
       /**
        * Execute the XMLHTTPRequest
-       * @param {object} cfg Overload jQuery.ajax configuration object
+       * @param {object} cfg Overload $.ajax configuration object
        */
       load: function (cfg) {
-        return jQuery.ajax(this.loadableConfig(cfg));
+        return $.ajax(this.loadableConfig(cfg));
       }
 
     });
@@ -248,14 +248,14 @@
     return obj;
   };
   /**
-   * jQuery.renderable
+   * $.renderable
    *
    * @param {object|function} obj (optional) Object to be augmented with renderable behavior
    * @param {string} tpl Template or URL to template file
    * @param {string|jQuery} elem (optional) Target DOM element
    * @return {object} Augmented object
    */
-  jQuery.renderable = function (obj, tpl, elem) {
+  $.renderable = function (obj, tpl, elem) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -265,15 +265,15 @@
     }
 
     // Implement bindable behavior, adding custom methods for render events
-    obj = jQuery.bindable(obj, 'onBeforeRender onRender');
+    obj = $.bindable(obj, 'onBeforeRender onRender');
 
     // Create a jQuery target to handle DOM load
     if (typeof elem !== 'undefined') {
-      elem = jQuery(elem);
+      elem = $(elem);
     }
 
     // Create renderer function from supplied template
-    var renderer = jQuery.isFunction(tpl) ? tpl : jQuery.template(tpl);
+    var renderer = $.isFunction(tpl) ? tpl : $.template(tpl);
 
     // Augment the object with a render method
     obj.render = function (data, raw) {
@@ -288,7 +288,7 @@
       this.trigger('onBeforeRender', [data]);
 
       // Force raw HTML if elem exists (saves effort)
-      var ret = renderer(data, !!elem || raw);
+      var ret = renderer.call(this, data, !!elem || raw);
 
       if (elem) {
         elem.html(ret);
@@ -302,12 +302,12 @@
     return obj;
   };
   /**
-   * jQuery.pollable
+   * $.pollable
    * @todo add passing of anon function to start?
    * @param {object|function} obj (optional) Object to be augmented with pollable behavior
    * @return {object} Augmented object
    */
-  jQuery.pollable = function (obj) {
+  $.pollable = function (obj) {
 
     // Allow instantiation without object
     if (typeof obj === 'undefined') {
@@ -315,17 +315,17 @@
     }
 
     // Implement bindable behavior, adding custom methods for pollable events
-    obj = jQuery.bindable(obj, 'onStart onExecute onStop');
+    obj = $.bindable(obj, 'onStart onExecute onStop');
 
     // Augment the object with an pollable methods
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * @param {string} method
        * @return {boolean}
        */
       isExecuting: function (method) {
-        var timers = jQuery(this).data('pollable.timers') || {};
+        var timers = $(this).data('pollable.timers') || {};
         return method in timers;
       },
 
@@ -345,14 +345,14 @@
 
         data = data || [];
 
-        if (!this.isExecuting(method) && jQuery.isFunction(this[method]) && interval > 0) {
+        if (!this.isExecuting(method) && $.isFunction(this[method]) && interval > 0) {
 
-          self   = jQuery(this);
+          self   = $(this);
           timers = self.data('pollable.timers') || {};
 
           // Store the proxy method as a property of the original method
           // for later removal
-          this[method].proxy = jQuery.proxy(function () {
+          this[method].proxy = $.proxy(function () {
             this.trigger('onExecute', [method, this[method].apply(this, data)]);
           }, this);
 
@@ -381,7 +381,7 @@
 
         if (this.isExecuting(method)) {
 
-          self   = jQuery(this);
+          self   = $(this);
           timers = self.data('pollable.timers') || {};
 
           // Clear timer
@@ -405,13 +405,13 @@
     return obj;
   };
   /**
-   * jQuery.cacheable
+   * $.cacheable
    *
    * @param {object|function} obj (optional) Object to be augmented with cacheable behavior
    * @param {number} defaultTtl (optional) Default time-to-live for cached items
    * @return {object} Augmented object
    */
-  jQuery.cacheable = function (obj, defaultTtl) {
+  $.cacheable = function (obj, defaultTtl) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -425,7 +425,7 @@
     // I love using Infinity :)
     defaultTtl = typeof defaultTtl !== 'undefined' ? defaultTtl : Infinity;
 
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * @param {string} key
@@ -435,9 +435,9 @@
        */
       cacheSet: function(key, value, ttl) {
 
-        var self    = jQuery(this),
+        var self    = $(this),
             cache   = self.data('cacheable.cache') || {},
-            expires = jQuery.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
+            expires = $.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
 
         cache[key] = {
           value:   value,
@@ -453,7 +453,7 @@
        */
       cacheGet: function(key) {
 
-        var cache = jQuery(this).data('cacheable.cache') || {},
+        var cache = $(this).data('cacheable.cache') || {},
             data,
             ret;
 
@@ -463,7 +463,7 @@
 
             data = cache[key];
 
-            if (data.expires < jQuery.now()) {
+            if (data.expires < $.now()) {
               this.cacheUnset(key);
             } else {
               ret = data.value;
@@ -482,7 +482,7 @@
        * @return {boolean}
        */
       cacheHas: function(key) {
-        var cache = jQuery(this).data('cacheable.cache');
+        var cache = $(this).data('cacheable.cache');
         return (key in cache);
       },
 
@@ -492,7 +492,7 @@
        */
       cacheUnset: function(key) {
 
-        var self  = jQuery(this),
+        var self  = $(this),
             cache = self.data('cacheable.cache');
 
         if (cache && key in cache) {
@@ -505,7 +505,7 @@
       },
 
       cacheEmpty: function() {
-        jQuery(this).data('cacheable.cache', {});
+        $(this).data('cacheable.cache', {});
       }
 
     });
@@ -513,12 +513,12 @@
     return obj;
   };
   /**
-   * jQuery.observable
+   * $.observable
    *
    * @param {object|function} obj Object to be augmented with observable behavior
    * @return {object} Augmented object
    */
-  jQuery.observable = function (obj) {
+  $.observable = function (obj) {
 
     // Allow instantiation without object
     if (typeof obj === 'undefined') {
@@ -526,10 +526,10 @@
     }
 
     // Implement bindable behavior, adding custom methods for render events
-    obj = jQuery.bindable(obj, 'onObserve');
+    obj = $.bindable(obj, 'onObserve');
 
     // Augment the object with observe and ignore methods
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       observe: function (obj, namespaces) {
         obj.bind('*', $.proxy(function (evt) {
@@ -562,4 +562,8 @@
 
     return obj;
   };
+
+  // $.each($.)
+
+
 })(this, this.document, this.jQuery);

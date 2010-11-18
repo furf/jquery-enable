@@ -1,10 +1,10 @@
   /**
-   * jQuery.observable
+   * $.observable
    *
    * @param {object|function} obj Object to be augmented with observable behavior
    * @return {object} Augmented object
    */
-  jQuery.observable = function (obj) {
+  $.observable = function (obj) {
 
     // Allow instantiation without object
     if (typeof obj === 'undefined') {
@@ -12,10 +12,10 @@
     }
 
     // Implement bindable behavior, adding custom methods for render events
-    obj = jQuery.bindable(obj, 'onObserve');
+    obj = $.bindable(obj, 'onObserve');
 
     // Augment the object with observe and ignore methods
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       observe: function (obj, namespaces) {
         obj.bind('*', $.proxy(function (evt) {

@@ -1,12 +1,12 @@
   /**
-   * jQuery.renderable
+   * $.renderable
    *
    * @param {object|function} obj (optional) Object to be augmented with renderable behavior
    * @param {string} tpl Template or URL to template file
    * @param {string|jQuery} elem (optional) Target DOM element
    * @return {object} Augmented object
    */
-  jQuery.renderable = function (obj, tpl, elem) {
+  $.renderable = function (obj, tpl, elem) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -16,15 +16,15 @@
     }
 
     // Implement bindable behavior, adding custom methods for render events
-    obj = jQuery.bindable(obj, 'onBeforeRender onRender');
+    obj = $.bindable(obj, 'onBeforeRender onRender');
 
     // Create a jQuery target to handle DOM load
     if (typeof elem !== 'undefined') {
-      elem = jQuery(elem);
+      elem = $(elem);
     }
 
     // Create renderer function from supplied template
-    var renderer = jQuery.isFunction(tpl) ? tpl : jQuery.template(tpl);
+    var renderer = $.isFunction(tpl) ? tpl : $.template(tpl);
 
     // Augment the object with a render method
     obj.render = function (data, raw) {
@@ -39,7 +39,7 @@
       this.trigger('onBeforeRender', [data]);
 
       // Force raw HTML if elem exists (saves effort)
-      var ret = renderer(data, !!elem || raw);
+      var ret = renderer.call(this, data, !!elem || raw);
 
       if (elem) {
         elem.html(ret);

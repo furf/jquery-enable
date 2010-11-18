@@ -1,10 +1,10 @@
   /**
-   * jQuery.pollable
+   * $.pollable
    * @todo add passing of anon function to start?
    * @param {object|function} obj (optional) Object to be augmented with pollable behavior
    * @return {object} Augmented object
    */
-  jQuery.pollable = function (obj) {
+  $.pollable = function (obj) {
 
     // Allow instantiation without object
     if (typeof obj === 'undefined') {
@@ -12,17 +12,17 @@
     }
 
     // Implement bindable behavior, adding custom methods for pollable events
-    obj = jQuery.bindable(obj, 'onStart onExecute onStop');
+    obj = $.bindable(obj, 'onStart onExecute onStop');
 
     // Augment the object with an pollable methods
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * @param {string} method
        * @return {boolean}
        */
       isExecuting: function (method) {
-        var timers = jQuery(this).data('pollable.timers') || {};
+        var timers = $(this).data('pollable.timers') || {};
         return method in timers;
       },
 
@@ -42,14 +42,14 @@
 
         data = data || [];
 
-        if (!this.isExecuting(method) && jQuery.isFunction(this[method]) && interval > 0) {
+        if (!this.isExecuting(method) && $.isFunction(this[method]) && interval > 0) {
 
-          self   = jQuery(this);
+          self   = $(this);
           timers = self.data('pollable.timers') || {};
 
           // Store the proxy method as a property of the original method
           // for later removal
-          this[method].proxy = jQuery.proxy(function () {
+          this[method].proxy = $.proxy(function () {
             this.trigger('onExecute', [method, this[method].apply(this, data)]);
           }, this);
 
@@ -78,7 +78,7 @@
 
         if (this.isExecuting(method)) {
 
-          self   = jQuery(this);
+          self   = $(this);
           timers = self.data('pollable.timers') || {};
 
           // Clear timer

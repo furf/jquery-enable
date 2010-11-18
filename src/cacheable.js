@@ -1,11 +1,11 @@
   /**
-   * jQuery.cacheable
+   * $.cacheable
    *
    * @param {object|function} obj (optional) Object to be augmented with cacheable behavior
    * @param {number} defaultTtl (optional) Default time-to-live for cached items
    * @return {object} Augmented object
    */
-  jQuery.cacheable = function (obj, defaultTtl) {
+  $.cacheable = function (obj, defaultTtl) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -19,7 +19,7 @@
     // I love using Infinity :)
     defaultTtl = typeof defaultTtl !== 'undefined' ? defaultTtl : Infinity;
 
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * @param {string} key
@@ -29,9 +29,9 @@
        */
       cacheSet: function(key, value, ttl) {
 
-        var self    = jQuery(this),
+        var self    = $(this),
             cache   = self.data('cacheable.cache') || {},
-            expires = jQuery.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
+            expires = $.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
 
         cache[key] = {
           value:   value,
@@ -47,7 +47,7 @@
        */
       cacheGet: function(key) {
 
-        var cache = jQuery(this).data('cacheable.cache') || {},
+        var cache = $(this).data('cacheable.cache') || {},
             data,
             ret;
 
@@ -57,7 +57,7 @@
 
             data = cache[key];
 
-            if (data.expires < jQuery.now()) {
+            if (data.expires < $.now()) {
               this.cacheUnset(key);
             } else {
               ret = data.value;
@@ -76,7 +76,7 @@
        * @return {boolean}
        */
       cacheHas: function(key) {
-        var cache = jQuery(this).data('cacheable.cache');
+        var cache = $(this).data('cacheable.cache');
         return (key in cache);
       },
 
@@ -86,7 +86,7 @@
        */
       cacheUnset: function(key) {
 
-        var self  = jQuery(this),
+        var self  = $(this),
             cache = self.data('cacheable.cache');
 
         if (cache && key in cache) {
@@ -99,7 +99,7 @@
       },
 
       cacheEmpty: function() {
-        jQuery(this).data('cacheable.cache', {});
+        $(this).data('cacheable.cache', {});
       }
 
     });

@@ -10,7 +10,7 @@
    * @param {string} str Whitespace-delimited list
    * @return {array}
    */
-  jQuery.unwhite = function (str) {
-    str = str && jQuery.trim(str);
+  $.unwhite = function (str) {
+    str = str && $.trim(str);
     return str.length ? str.split(rwhite) : [];
   };

@@ -1,11 +1,11 @@
   /**
-   * jQuery.loadable
+   * $.loadable
    *
    * @param {object|function} obj (optional) Object to be augmented with loadable behavior
-   * @param {object|string} defaultCfg Default jQuery.ajax configuration object
+   * @param {object|string} defaultCfg Default $.ajax configuration object
    * @return {object} Augmented object
    */
-  jQuery.loadable = function (obj, defaultCfg) {
+  $.loadable = function (obj, defaultCfg) {
 
     // Allow instantiation without object
     if (typeof defaultCfg === 'undefined') {
@@ -14,7 +14,7 @@
     }
 
     // Implement bindable behavior, adding custom methods for Ajax events
-    obj = jQuery.bindable(obj, 'onLoadBeforeSend onLoadAbort onLoadSuccess onLoadError onLoadComplete');
+    obj = $.bindable(obj, 'onLoadBeforeSend onLoadAbort onLoadSuccess onLoadError onLoadComplete');
 
     // Allow URL as config (shortcut)
     if (typeof defaultCfg === 'string') {
@@ -23,7 +23,7 @@
       };
     }
 
-    jQuery.extend(obj, {
+    $.extend(obj, {
 
       /**
        * Merge runtime config with default config
@@ -40,14 +40,14 @@
           cfg = {
             url: cfg
           };
-        } else if (jQuery.isFunction(cfg)) {
+        } else if ($.isFunction(cfg)) {
           cfg = {
             success: cfg
           };
         }
 
         // Extend default config with runtime config
-        cfg = jQuery.extend(true, {}, defaultCfg, cfg);
+        cfg = $.extend(true, {}, defaultCfg, cfg);
 
         // Cache configured callbacks so they can be called from wrapper
         // functions below.
@@ -57,19 +57,19 @@
         error      = cfg.error;
         complete   = cfg.complete;
 
-        // Overload each of the configured jQuery.ajax callback methods with an
+        // Overload each of the configured $.ajax callback methods with an
         // evented wrapper function. Each wrapper function executes the
         // configured callback in the scope of the loadable object and then
         // fires the corresponding event, passing to it the return value of
         // the configured callback or the unmodified arguments if no callback
         // is supplied or the return value is undefined.
-        return jQuery.extend(cfg, {
+        return $.extend(cfg, {
 
           /**
            * @param {XMLHTTPRequest} xhr
            * @param {object} cfg
            */
-          beforeSend: jQuery.proxy(function (xhr, cfg) {
+          beforeSend: $.proxy(function (xhr, cfg) {
 
             // If defined, execute the beforeSend callback and store its return
             // value for later return from this proxy function -- used for
@@ -91,7 +91,7 @@
 
 
           // just added -- doc it up
-          dataFilter: dataFilter && jQuery.proxy(function (response, type) {
+          dataFilter: dataFilter && $.proxy(function (response, type) {
             return dataFilter.apply(this, arguments);
           }, this),
 
@@ -101,7 +101,7 @@
            * @param {string} status
            * @param {XMLHTTPRequest} xhr
            */
-          success: jQuery.proxy(function (data, status, xhr) {
+          success: $.proxy(function (data, status, xhr) {
 
             var ret;
 
@@ -123,7 +123,7 @@
            * @param {Error} e
            * @todo correct param type for error?
            */
-          error: jQuery.proxy(function (xhr, status, e) {
+          error: $.proxy(function (xhr, status, e) {
 
             var ret;
 
@@ -143,7 +143,7 @@
            * @param {XMLHTTPRequest} xhr
            * @param {string} status
            */
-          complete: jQuery.proxy(function (xhr, status) {
+          complete: $.proxy(function (xhr, status) {
 
             var ret;
 
@@ -163,10 +163,10 @@
 
       /**
        * Execute the XMLHTTPRequest
-       * @param {object} cfg Overload jQuery.ajax configuration object
+       * @param {object} cfg Overload $.ajax configuration object
        */
       load: function (cfg) {
-        return jQuery.ajax(this.loadableConfig(cfg));
+        return $.ajax(this.loadableConfig(cfg));
       }
 
     });
