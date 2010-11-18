@@ -1,0 +1,1 @@
+{%= this.name %} said, "{%= this.msg || "NOTHING!" %}"

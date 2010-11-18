@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+
+    <title>enable</title>
+
+    <!--[if IE]><script type="text/javascript" charset="utf-8">/*@cc_on'abbr article aside audio canvas details figcaption figure footer header hgroup mark menu meter nav output progress section summary time video'.replace(/\w+/g,function(n){document.createElement(n)})@*/</script><![endif]-->
+    
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/base/jquery-ui.css" type="text/css" media="all">
+    <style type="text/css" media="screen">
+      
+    </style>
+    
+  </head>
+  <body>
+    
+    <div id="container">
+      
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="https://github.com/furf/jquery-template/raw/master/jquery.template.js"></script>
+    <script src="../dist/jquery.enable.js"></script>    
+    <script>
+    (function (window, document, $) {
+
+      function dump (name) {
+        return function (evt) {
+          console.dir({
+            '1. test': name + ' > ' + evt.type,
+            '2. event': evt,
+            '3. data': Array.prototype.slice.call(arguments, 1),
+            '4. name': this.name
+          });
+        };
+      }
+      
+      
+      function Person (name) {
+        this.name = name;
+      }
+
+      Person.prototype = {
+        doSomething: function (thing) {
+          this.trigger('onDoSomething', [thing]);
+        },
+        doSomethingElse: function (thing) {
+          this.trigger('onDoSomethingElse', [thing]);
+          return thing;
+        }
+      };
+
+      var furf = new Person('furf');
+
+      console.profile('testing');
+      console.groupCollapsed('flop');
+      
+      
+      // bindable
+      $.bindable(Person, 'onDoSomething onDoSomethingElse');
+      furf.bind('onDoSomething', dump('bindable'));
+      furf.doSomething('fart');
+      
+      
+      // loadable
+      $.loadable(Person, 'test.json');
+      furf.onLoadSuccess(dump('loadable'));
+      furf.load();
+
+
+      // renderable
+      $.renderable(Person, 'test.tpl');
+      furf.onBeforeRender(dump('renderable'));
+      furf.onRender(dump('renderable'));
+      furf.render({msg:"wahoo!"}, true);
+
+
+      // pollable
+      $.pollable(Person, 'doSomethingElse');
+      furf.onStart(dump('pollable'));
+      furf.onExecute(dump('pollable'));
+      furf.onStop(dump('pollable'));
+      furf.onDoSomethingElse(dump('pollable'));
+      furf.start('doSomethingElse', 1000, ['burp'], true);
+      setTimeout(function () {
+        furf.stop('doSomethingElse');
+
+        console.groupEnd('flop');
+        console.profileEnd('testing');
+      }, 500);
+
+
+
+
+      
+    })(this, this.document, this.jQuery);
+    </script>
+    
+  </body>
+</html>
