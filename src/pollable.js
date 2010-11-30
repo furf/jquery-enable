@@ -1,11 +1,11 @@
 
   /**
-   * $.pollable
+   * jQuery.pollable
    * @todo add passing of anon function to start?
-   * @param {object|function} obj (optional) Object to be augmented with pollable behavior
+   * @param {Object|Function} obj (optional) Object to be augmented with pollable behavior
    * @return {object} Augmented object
    */
-  $.pollable = function (obj) {
+  jQuery.pollable = function (obj) {
 
     // Allow instantiation without object
     if (typeof obj === 'undefined') {
@@ -13,24 +13,24 @@
     }
 
     // Implement bindable behavior, adding custom methods for pollable events
-    obj = $.bindable(obj, 'onStart onExecute onStop');
+    obj = jQuery.bindable(obj, 'onStart onExecute onStop');
 
     // Augment the object with an pollable methods
-    $.extend(obj, {
+    jQuery.extend(obj, {
 
       /**
-       * @param {string} method
+       * @param {String} method
        * @return {boolean}
        */
       isExecuting: function (method) {
-        var timers = $(this).data('pollable.timers') || {};
+        var timers = jQuery(this).data('pollable.timers') || {};
         return method in timers;
       },
 
       /**
-       * @param {string} method
-       * @param {number} interval
-       * @param {boolean} immediately
+       * @param {String} method
+       * @param {Number} interval
+       * @param {Boolean} immediately
        */
       start: function (method, interval, data, immediately) {
 
@@ -43,14 +43,14 @@
 
         data = data || [];
 
-        if (!this.isExecuting(method) && $.isFunction(this[method]) && interval > 0) {
+        if (!this.isExecuting(method) && jQuery.isFunction(this[method]) && interval > 0) {
 
-          self   = $(this);
+          self   = jQuery(this);
           timers = self.data('pollable.timers') || {};
 
           // Store the proxy method as a property of the original method
           // for later removal
-          this[method].proxy = $.proxy(function () {
+          this[method].proxy = jQuery.proxy(function () {
             this.trigger('onExecute', [method, this[method].apply(this, data)]);
           }, this);
 
@@ -71,7 +71,7 @@
       },
 
       /**
-       * @param {string} method
+       * @param {String} method
        */
       stop: function (method) {
 
@@ -79,7 +79,7 @@
 
         if (this.isExecuting(method)) {
 
-          self   = $(this);
+          self   = jQuery(this);
           timers = self.data('pollable.timers') || {};
 
           // Clear timer

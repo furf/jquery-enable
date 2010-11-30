@@ -25,6 +25,54 @@
     <script>
     (function (window, document, $) {
 
+      // // Usage with a static object
+      // var dave = {
+      //   name: 'dave',
+      //   saySomething: function (text) {
+      //     alert(this.name + ' says: ' + text);
+      //     this.trigger('onSaySomething', [text]);
+      //   }
+      // };
+      // 
+      // // Add bindable behavior
+      // $.bindable(dave);
+      // 
+      // // Add event listener using bind method
+      // dave.bind('onSaySomething', function (evt, data) {
+      //   console.log(this.name + ' said: ' + data);
+      // });
+      // 
+      // dave.saySomething('hello, world!');
+      // // alerts "furf says: hello, world!"
+      // // logs "furf said: hello, world!"
+      // 
+      // 
+      // // Usage with a class
+      // function Person (name) {
+      //   this.name = name
+      // }
+      // 
+      // // Add bindable behavior with custom event method
+      // $.bindable(Person, 'onSaySomething');
+      // 
+      // Person.prototype.saySomething = function (text) {
+      //   alert(this.name + ' says: ' + text);
+      //   this.trigger('onSaySomething', [text]);
+      // };
+      // 
+      // // Create instance
+      // var furf = new Person('furf');
+      // 
+      // // Add event listener using custom event method
+      // furf.onSaySomething(function (evt, data) {
+      //   console.log(this.name + ' said: ' + data);
+      // });
+      // 
+      // furf.saySomething('hello, world!');
+      // // alerts "furf says: hello, world!"
+      // // logs "furf said: hello, world!"
+
+      
       function dump (name) {
         return function (evt) {
           console.dir({
@@ -40,7 +88,7 @@
       function Person (name) {
         this.name = name;
       }
-
+      
       Person.prototype = {
         doSomething: function (thing) {
           this.trigger('onDoSomething', [thing]);
@@ -50,7 +98,7 @@
           return thing;
         }
       };
-
+      
       var furf = new Person('furf');
       
       console.profile();
@@ -59,7 +107,7 @@
       $.loadable(Person, 'test.json');
       $.renderable(Person, 'test.tpl');
       $.pollable(Person);
-
+      
             
       // bindable
       furf.bind('onDoSomething', dump('bindable'));
@@ -87,7 +135,7 @@
         furf.stop('doSomethingElse');
         console.profileEnd();
       }, 500);
-
+      
 
     })(this, this.document, this.jQuery);
     </script>

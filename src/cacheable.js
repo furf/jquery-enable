@@ -1,12 +1,15 @@
 
   /**
-   * $.cacheable
+   * @description <p>Augments a static object or Class prototype with timed
+   * caching functionality.</p>
    *
-   * @param {object|function} obj (optional) Object to be augmented with cacheable behavior
-   * @param {number} defaultTtl (optional) Default time-to-live for cached items
+   * @param {Object|Function} obj (optional) Object to be augmented with
+   *   cacheable behavior
+   * @param {Number} defaultTtl (optional) Default time-to-live for cached
+   *   items
    * @return {object} Augmented object
    */
-  $.cacheable = function (obj, defaultTtl) {
+  jQuery.cacheable = function (obj, defaultTtl) {
 
     // Allow instantiation without object
     if (!(obj instanceof Object)) {
@@ -20,19 +23,19 @@
     // I love using Infinity :)
     defaultTtl = typeof defaultTtl !== 'undefined' ? defaultTtl : Infinity;
 
-    $.extend(obj, {
+    jQuery.extend(obj, {
 
       /**
-       * @param {string} key
+       * @param {String} key
        * @param {*} value
-       * @param {number} ttl
+       * @param {Number} ttl
        * @return undefined
        */
       cacheSet: function(key, value, ttl) {
 
-        var self    = $(this),
+        var self    = jQuery(this),
             cache   = self.data('cacheable.cache') || {},
-            expires = $.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
+            expires = jQuery.now() + (typeof ttl !== 'undefined' ? ttl : defaultTtl);
 
         cache[key] = {
           value:   value,
@@ -43,12 +46,12 @@
       },
 
       /**
-       * @param {string} key
+       * @param {String} key
        * @return
        */
       cacheGet: function(key) {
 
-        var cache = $(this).data('cacheable.cache') || {},
+        var cache = jQuery(this).data('cacheable.cache') || {},
             data,
             ret;
 
@@ -58,7 +61,7 @@
 
             data = cache[key];
 
-            if (data.expires < $.now()) {
+            if (data.expires < jQuery.now()) {
               this.cacheUnset(key);
             } else {
               ret = data.value;
@@ -73,21 +76,21 @@
       },
 
       /**
-       * @param {string} key
+       * @param {String} key
        * @return {boolean}
        */
       cacheHas: function(key) {
-        var cache = $(this).data('cacheable.cache');
+        var cache = jQuery(this).data('cacheable.cache');
         return (key in cache);
       },
 
       /**
-       * @param {string} key
+       * @param {String} key
        * @return undefined
        */
       cacheUnset: function(key) {
 
-        var self  = $(this),
+        var self  = jQuery(this),
             cache = self.data('cacheable.cache');
 
         if (cache && key in cache) {
@@ -100,7 +103,7 @@
       },
 
       cacheEmpty: function() {
-        $(this).data('cacheable.cache', {});
+        jQuery(this).data('cacheable.cache', {});
       }
 
     });

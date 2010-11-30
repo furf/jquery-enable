@@ -1,36 +1,61 @@
-load("build/jslint.js");
+load('build/jslint.js');
 
-var src = readFile("dist/jquery.enable.js");
+var dir = 'dist/',
+    files = [
+      'jquery.enable.js'
+    ],
+    
+    i, n,
+    
+    // JSLINT config
+    config = {
+      evil:   true,
+      forin:  true,
+      maxerr: 100
+    },
 
-JSLINT(src, { evil: true, forin: true, maxerr: 100 });
+    // All of the following are known issues that we think are 'ok'
+    // (in contradiction with JSLint) more information here:
+    // http://docs.jquery.com/JQuery_Core_Style_Guidelines
+    ok = {
+      // 'Expected an identifier and instead saw \'undefined\' (a reserved word).': true,
+      // 'Use \'===\' to compare with \'null\'.': true,
+      // 'Use \'!==\' to compare with \'null\'.': true,
+      // '\'now\' was used before it was defined.': true
+    };
 
-// All of the following are known issues that we think are 'ok'
-// (in contradiction with JSLint) more information here:
-// http://docs.jquery.com/JQuery_Core_Style_Guidelines
-var ok = {
-	"Expected an identifier and instead saw 'undefined' (a reserved word).": true,
-	"Use '===' to compare with 'null'.": true,
-	"Use '!==' to compare with 'null'.": true,
-	"Expected an assignment or function call and instead saw an expression.": true,
-	"Expected a 'break' statement before 'case'.": true,
-	"'e' is already defined.": true
-};
 
-var e = JSLINT.errors, found = 0, w;
-
-for ( var i = 0; i < e.length; i++ ) {
-	w = e[i];
-
-	if ( !ok[ w.reason ] ) {
-		found++;
-		print( "\n" + w.evidence + "\n" );
-		print( "    Problem at line " + w.line + " character " + w.character + ": " + w.reason );
-	}
+for (i = 0, n = files.length; i < n; ++i) {
+  lint(dir + files[i]);
 }
 
-if ( found > 0 ) {
-	print( "\n" + found + " Error(s) found." );
 
-} else {
-	print( "JSLint check passed." );
+function lint (file) {
+
+  var found = 0, src, errors, i, n, error;
+
+  print('JSLint checking: ' + file);
+
+  src = readFile(file);
+
+  JSLINT(src, config);
+  
+  errors = JSLINT.errors;
+  
+  for (i = 0, n = errors.length; i < n; ++i) {
+    
+    error = errors[i];
+
+    if (!ok[error.reason]) {
+      found++;
+      print(error.evidence);
+      print('    Problem at line ' + error.line + ' character ' + error.character + ': ' + error.reason);
+    }
+  }
+
+  if (found > 0) {
+    print(found + ' error(s) found.');
+  } else {
+    print('JSLint check passed.');
+  }
 }
