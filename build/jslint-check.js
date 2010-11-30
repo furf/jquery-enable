@@ -2,7 +2,8 @@ load('build/jslint.js');
 
 var dir = 'dist/',
     files = [
-      'jquery.enable.js'
+      'jquery.enable.js',
+      'jquery.bindable.js'
     ],
     
     i, n,

@@ -1,79 +1,78 @@
-SRC_DIR = src
-TEST_DIR = test
-BUILD_DIR = build
-
 PREFIX = .
+SRC_DIR = src
+BUILD_DIR = build
 DIST_DIR = ${PREFIX}/dist
-
-RHINO ?= java -jar ${BUILD_DIR}/js.jar
-
-YUI_COMPRESSOR = ${BUILD_DIR}/yuicompressor.jar
-
-MINJAR ?= java -jar ${YUI_COMPRESSOR} --preserve-semi
-
 DOCS_DIR = ${PREFIX}/docs
 
-JSDOC = ${BUILD_DIR}/jsdoc-toolkit
+# Used to lint scripts
+RHINO ?= java -jar ${BUILD_DIR}/js.jar
 
+# Compression
+YUI_COMPRESSOR = ${BUILD_DIR}/yuicompressor.jar
+COMPRESS ?= java -jar ${YUI_COMPRESSOR} --preserve-semi
+
+# Documentation
+JSDOC = ${BUILD_DIR}/jsdoc-toolkit
 DOCJAR ?= java -jar ${JSDOC}/jsrun.jar ${JSDOC}/app/run.js -a -d=${DOCS_DIR} -t=${JSDOC}/templates/jsdoc
 
-BASE_FILES = ${SRC_DIR}/util.js\
+# Version
+ENABLE_VER = $(shell cat version.txt)
+VER = sed s/@VERSION/${ENABLE_VER}/
+
+# Packages
+ENABLE = jquery.enable
+ENABLE_JS = ${DIST_DIR}/${ENABLE}.js
+ENABLE_MIN = ${DIST_DIR}/${ENABLE}.min.js
+ENABLE_MODULES = ${SRC_DIR}/intro.js\
+	${SRC_DIR}/util.js\
 	${SRC_DIR}/bindable.js\
 	${SRC_DIR}/loadable.js\
 	${SRC_DIR}/renderable.js\
 	${SRC_DIR}/pollable.js\
 	${SRC_DIR}/cacheable.js\
 	${SRC_DIR}/observable.js\
+	${SRC_DIR}/outro.js\
 
-MODULES = ${SRC_DIR}/intro.js\
-	${BASE_FILES}\
-	${SRC_DIR}/outro.js
+BINDABLE = jquery.bindable
+BINDABLE_JS = ${DIST_DIR}/${BINDABLE}.js
+BINDABLE_MIN = ${DIST_DIR}/${BINDABLE}.min.js
+BINDABLE_MODULES = ${SRC_DIR}/intro.js\
+	${SRC_DIR}/util.js\
+	${SRC_DIR}/bindable.js\
+	${SRC_DIR}/outro.js\
 
-JQUERY_ENABLE = ${DIST_DIR}/jquery.enable.js
-JQUERY_ENABLE_MIN = ${DIST_DIR}/jquery.enable.min.js
 
-JQUERY_ENABLE_VER = $(shell cat version.txt)
-VER = sed s/@VERSION/${JQUERY_ENABLE_VER}/
+all: init build lint min doc
+	@@echo "Build complete."
 
-all: clean build lint min doc
-	@@echo "jQuery.enable build complete."
-
-clean:
-	@@echo "Removing documentation directory:" ${DOCS_DIR}
-	@@rm -rf ${DOCS_DIR}
-
-	@@echo "Removing distribution directory:" ${DIST_DIR}
-	@@rm -rf ${DIST_DIR}
-
-${DIST_DIR}:
+init:
 	@@echo "Making distribution directory:" ${DIST_DIR}
 	@@mkdir -p ${DIST_DIR}
 
-build: ${MODULES} ${DIST_DIR}
-	@@echo "Building" ${JQUERY_ENABLE}
-
-	@@cat ${MODULES} | \
-		sed 's/.function..jQuery.enable...{//' | \
-		sed 's/}...jQuery.enable..;//' | \
-		${VER} > ${JQUERY_ENABLE};
+build:
+	@@echo "Building:" ${ENABLE_JS}
+	@@cat ${ENABLE_MODULES} | \
+		sed s/@SCRIPT/${ENABLE}/ | \
+		${VER} > ${ENABLE_JS};
+	@@echo "Building:" ${BINDABLE_JS}
+	@@cat ${BINDABLE_MODULES} | \
+		sed s/@SCRIPT/${BINDABLE}/ | \
+		${VER} > ${BINDABLE_JS};
 
 lint:
-	@@echo "Checking jQuery.enable against JSLint..."
-	@@${RHINO} build/jslint-check.js
+	@@echo "Checking with JSLint..."
+	@@${RHINO} ${BUILD_DIR}/jslint-check.js
 
-min: ${JQUERY_ENABLE}
-	@@echo "Building" ${JQUERY_ENABLE_MIN}
+min:
+	@@echo "Minimizing:" ${ENABLE_MIN}
+	@@${COMPRESS} -o ${ENABLE_MIN} ${ENABLE_JS}
+	@@echo "Minimizing:" ${BINDABLE_MIN}
+	@@${COMPRESS} -o ${BINDABLE_MIN} ${BINDABLE_JS}
 
-	@@${MINJAR} -o ${JQUERY_ENABLE_MIN}.tmp ${JQUERY_ENABLE}
-	@@cat ${JQUERY_ENABLE_MIN}.tmp >> ${JQUERY_ENABLE_MIN}
-	@@rm -f ${JQUERY_ENABLE_MIN}.tmp
-
-${DOCS_DIR}:
-	@@echo "Making documentation directory:" ${DIST_DIR}
+doc:
+	@@echo "Making documentation directory:" ${DOCS_DIR}
 	@@mkdir -p ${DOCS_DIR}
-
-doc: ${DOCS_DIR}
 	@@echo "Generating documentation"
-	@@${DOCJAR} ${JQUERY_ENABLE}
+	@@${DOCJAR} ${ENABLE_JS}
 
-.PHONY: all build lint min init clean
+.PHONY: all init build lint min doc
