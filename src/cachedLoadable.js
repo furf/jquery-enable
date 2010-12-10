@@ -40,3 +40,43 @@
 
     return obj;
   };
+
+
+
+  /*
+  
+  // Usage
+  
+  function MyThing () {}
+  
+  // Implenent behavior:
+  $.cachedLoadable(MyThing, {
+
+    // new property!
+    ttl: 5000,
+
+    url: 'test.json',
+    dataFilter: function (data) {
+      var items = $.parseJSON(data).items.sort();
+      items.push(+new Date());
+      return items;
+    }
+  });
+  
+
+  // Create instance
+  var m = new MyThing();
+
+  // Listen to laod
+  m.onLoadSuccess(function (evt, data) {
+    console.log('listener heard:', data);
+  });
+  
+  // Call load every second
+  // Will only hit server once every 5 seconds
+  // Will load from cache the rest of the time
+  setInterval(function () {
+    m.load({data:{foo:'bar'}});
+  }, 1000);
+
+  */
