@@ -110,11 +110,19 @@
       
             
       // bindable
-      furf.bind('onDoSomething', dump('bindable'));
+      var dumpBindable = dump('bindable');
+
+      furf.bind('onDoSomething', dumpBindable);
       furf.doSomething('fart');
 
-      furf.on('onDoSomething', dump('bindable'));
+      furf.unbind('onDoSomething', dumpBindable);
+      furf.doSomething('fart again');
+
+      furf.on('onDoSomething', dumpBindable);
       furf.doSomething('shart');
+      
+      furf.off('onDoSomething', dumpBindable);
+      furf.doSomething('shart again');
       
       
       // loadable
