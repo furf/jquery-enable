@@ -19,7 +19,7 @@
       
     </div>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
     <script src="https://github.com/furf/jquery-template/raw/master/jquery.template.js"></script>
     <script src="../dist/jquery.enable.js"></script>    
     <script>
@@ -110,8 +110,19 @@
       
             
       // bindable
-      furf.bind('onDoSomething', dump('bindable'));
+      var dumpBindable = dump('bindable');
+
+      furf.bind('onDoSomething', dumpBindable);
       furf.doSomething('fart');
+
+      furf.unbind('onDoSomething', dumpBindable);
+      furf.doSomething('fart again');
+
+      furf.on('onDoSomething', dumpBindable);
+      furf.doSomething('shart');
+      
+      furf.off('onDoSomething', dumpBindable);
+      furf.doSomething('shart again');
       
       
       // loadable

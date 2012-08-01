@@ -142,7 +142,7 @@
     obj = jQuery.isFunction(obj) ? obj.prototype : obj;
 
     // Augment the object with jQuery's bind, one, and unbind event methods
-    jQuery.each(['bind', 'one', 'unbind'], function (i, method) {
+    jQuery.each(['bind', 'one', 'unbind', 'on', 'off'], function (i, method) {
       obj[method] = function (type, data, fn) {
         jQuery(this)[method](type, data, fn);
         return this;
