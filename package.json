@@ -1,6 +1,6 @@
 {
-  "name": "jQuery.enable",
-  "description": "jQuery.enable.js is a small library of jQuery plugins designed to extend evented behaviors to JavaScript objects and classes. These behaviors include: custom events, Ajax, templating, caching, polling, and more.",
+  "name": "jquery-enable",
+  "description": "jquery-enable is a small library of jQuery plugins designed to extend evented behaviors to JavaScript objects and classes. These behaviors include: custom events, Ajax, templating, caching, polling, and more.",
   "version": "0.6.0",
   "author": {
     "name": "Dave Furfero",
