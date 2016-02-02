@@ -1,0 +1,21 @@
+{
+  "name": "jQuery.enable",
+  "description": "jQuery.enable.js is a small library of jQuery plugins designed to extend evented behaviors to JavaScript objects and classes. These behaviors include: custom events, Ajax, templating, caching, polling, and more.",
+  "version": "0.6.0",
+  "authors": [
+    "furf.com"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/furf/jquery-enable.git",
+  "main": "dist/jquery.enable.js",
+  "dependencies": {
+    "jquery": "^1.7.1"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
